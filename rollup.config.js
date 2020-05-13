@@ -1,21 +1,25 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
-
-// `npm run build` -> `production` is true
-// `npm run dev` -> `production` is false
-const production = !process.env.ROLLUP_WATCH;
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
+import nodePolyfills from 'rollup-plugin-node-polyfills'
 
 export default {
-	input: 'src/main.js',
-	output: {
-		file: 'public/bundle.js',
-		format: 'iife', // immediately-invoked function expression — suitable for <script> tags
-		sourcemap: true
-	},
-	plugins: [
-		resolve(), // tells Rollup how to find date-fns in node_modules
-		commonjs(), // converts date-fns to ES modules
-		production && terser() // minify, but only in production
-	]
-};
+  input: 'src/main.js',
+  output: {
+    format: 'esm', // needs to be esm format as Onboard.js contains code-splitting
+    dir: 'public/esm/'
+  },
+  plugins: [
+    json(),
+    resolve({
+      browser: true,
+      preferBuiltins: true
+    }),
+    commonjs({
+      namedExports: {
+        "u2f-api": ["sign", "isSupported"]
+      }
+    }),
+    nodePolyfills()
+  ]
+}
