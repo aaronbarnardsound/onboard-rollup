@@ -12,7 +12,7 @@
     "serve": "^11.0.2"
   },
   "dependencies": {
-    "bnc-onboard": "^1.9.0"
+    "bnc-onboard": "https://github.com/blocknative/onboard#enhancement/update-authereum-dependency"
   },
   "scripts": {
     "build": "rimraf public/esm && rollup -c",
